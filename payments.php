@@ -1,12 +1,19 @@
-<?php include 'db_connect.php' ?>
+<?php include 'db_connect.php'; ?>
 
 <div class="container-fluid">
 	<div class="col-lg-12">
 		<div class="card">
 			<div class="card-header">
 				<large class="card-title">
-					<b>Payment List</b>
-					<button class="btn btn-primary btn-sm btn-block col-md-2 float-right" type="button" id="new_payments"><i class="fa fa-plus"></i> New Payment</button>
+					<div class="row">
+						<b class="col-md-8">Payment List</b>
+						<div class="col-md-2">
+							<button class="btn btn-info btn-block btn-sm float-right" type="button" id="print_payments"><i class="fa fa-print"></i> Print</button>
+						</div>
+						<div class="col-md-2">
+							<button class="btn btn-primary btn-block btn-sm float-right"  type="button" id="new_payments"><i class="fa fa-plus"></i> New Payment</button>
+						</div>
+					</div>
 				</large>
 				
 			</div>
@@ -27,39 +34,38 @@
 							<th class="text-center">Payee</th>
 							<th class="text-center">Amount</th>
 							<th class="text-center">Penalty</th>
-							<th class="text-center">Action</th>
+							<th class="text-center remove-on-print">Action</th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php
-							
-							$i=1;
-							
-							$qry = $conn->query("SELECT p.*,l.ref_no,concat(b.lastname,', ',b.firstname,' ',b.middlename)as name, b.contact_no, b.address from payments p inner join loan_list l on l.id = p.loan_id inner join borrowers b on b.id = l.borrower_id  order by p.id asc");
-							while($row = $qry->fetch_assoc()):
-								
 
-						 ?>
+                            $i = 1;
+
+                            $qry = $conn->query("SELECT p.*,l.ref_no,concat(b.lastname,', ',b.firstname,' ',b.middlename)as name, b.contact_no, b.address from payments p inner join loan_list l on l.id = p.loan_id inner join borrowers b on b.id = l.borrower_id  order by p.id asc");
+                            while ($row = $qry->fetch_assoc()):
+
+                         ?>
 						 <tr>
 						 	
-						 	<td class="text-center"><?php echo $i++ ?></td>
+						 	<td class="text-center"><?php echo $i++; ?></td>
 						 	<td>
-						 		<?php echo $row['ref_no'] ?>
+						 		<?php echo $row['ref_no']; ?>
 						 	</td>
 						 	<td>
-						 		<?php echo $row['payee'] ?>
+						 		<?php echo $row['payee']; ?>
 						 		
 						 	</td>
 						 	<td>
-						 		<?php echo number_format($row['amount'],2) ?>
+						 		<?php echo number_format($row['amount'], 2); ?>
 						 		
 						 	</td>
 						 	<td class="text-center">
-						 		<?php echo number_format($row['penalty_amount'],2) ?>
+						 		<?php echo number_format($row['penalty_amount'], 2); ?>
 						 	</td>
-						 	<td class="text-center">
-						 			<button class="btn btn-outline-primary btn-sm edit_payment" type="button" data-id="<?php echo $row['id'] ?>"><i class="fa fa-edit"></i></button>
-						 			<button class="btn btn-outline-danger btn-sm delete_payment" type="button" data-id="<?php echo $row['id'] ?>"><i class="fa fa-trash"></i></button>
+						 	<td class="text-center remove-on-print">
+						 			<button class="btn btn-outline-primary btn-sm edit_payment" type="button" data-id="<?php echo $row['id']; ?>"><i class="fa fa-edit"></i></button>
+						 			<button class="btn btn-outline-danger btn-sm delete_payment" type="button" data-id="<?php echo $row['id']; ?>"><i class="fa fa-trash"></i></button>
 						 	</td>
 
 						 </tr>
@@ -93,6 +99,19 @@
 	})
 	$('.delete_payment').click(function(){
 		_conf("Are you sure to delete this data?","delete_payment",[$(this).attr('data-id')])
+	})
+	$('#print_payments').click(function(e) {
+		e.preventDefault();
+		var printcontent = $('#loan-list').clone();
+		printcontent.attr('border', "1");
+		var printbody = $('html').clone().find('body').empty().html(printcontent);
+		printbody.find('.remove-on-print').remove();
+		var mywindow = window.open('', 'Print Section', 'height=400,width=600');
+    mywindow.document.write(printbody.prop('outerHTML'));
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
+    mywindow.print();
+    mywindow.close();
 	})
 function delete_payment($id){
 		start_load()
