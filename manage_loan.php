@@ -6,6 +6,13 @@ if (isset($_GET['id'])) {
         $$k = $v;
     }
 }
+if (isset($_GET['role'])) {
+    if ($_GET['role'] == 1) {
+        $role = 'admin';
+    } else {
+        $role = 'staff';
+    }
+}
 
 ?>
 <div class="container-fluid">
@@ -78,8 +85,13 @@ if (isset($_GET['id'])) {
 			<div class="form-group col-md-6">
 				<label class="control-label">&nbsp;</label>
 				<?php
-                // if status is For Approval
+
+                // if status is For Approvals
                     if ($status == 0):
+                                            $amount = (float) $amount;
+                                            if (($amount > 50000 && in_array($role, ['staff']))):
+                                                                                            echo '<b>Only admins can approve transactions above 50,000.00</b>';
+                                                                                        else:
                 ?>
 					<select class="custom-select browser-default" name="status">
 						<option value="0" <?php echo $status == 0 ? 'selected' : ''; ?>>For Approval</option>
@@ -87,7 +99,9 @@ if (isset($_GET['id'])) {
 						<option value="4" <?php echo $status == 4 ? 'selected' : ''; ?>>Denied</option>
 					</select>
 					<?php
-                    endif;
+
+                                            endif; // if ( ($amount >= 50000 &&  $role == 'admin') || ($amount <= 50000 && in_array($role, ['admin', 'staff'])))
+                    endif; // if($status == 0)
                     // if status is approved
                     if ($status == 1):
                     ?>

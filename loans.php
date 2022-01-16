@@ -113,7 +113,7 @@
 						 	
 						 	</td>
 						 	<td class="text-center">
-						 			<button class="btn btn-outline-primary btn-sm edit_loan" type="button" data-id="<?php echo $row['id']; ?>"><i class="fa fa-edit"></i></button>
+						 			<button class="btn btn-outline-primary btn-sm edit_loan" type="button" data-role="<?php echo $_SESSION['login_type']; ?>" data-id="<?php echo $row['id']; ?>"><i class="fa fa-edit"></i></button>
 						 			<button class="btn btn-outline-danger btn-sm delete_loan" type="button" data-id="<?php echo $row['id']; ?>"><i class="fa fa-trash"></i></button>
 						 	</td>
 
@@ -144,7 +144,7 @@
 		uni_modal("New Loan Application","manage_loan.php",'mid-large')
 	})
 	$('.edit_loan').click(function(){
-		uni_modal("Edit Loan","manage_loan.php?id="+$(this).attr('data-id'),'mid-large')
+		uni_modal("Edit Loan","manage_loan.php?id="+$(this).attr('data-id')+"&role="+$(this).attr('data-role'),'mid-large')
 	})
 	$('.delete_loan').click(function(){
 		_conf("Are you sure to delete this data?","delete_loan",[$(this).attr('data-id')])

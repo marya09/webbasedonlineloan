@@ -18,6 +18,7 @@ include_once './config/settings.php';
   }
  include './header.php';
  // include('./auth.php');
+
  ?>
 
 </head>
