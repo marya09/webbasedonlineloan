@@ -1,7 +1,6 @@
 <?php
-error_reporting(E_ALL ^ E_WARNING);
+include_once './config/settings.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 

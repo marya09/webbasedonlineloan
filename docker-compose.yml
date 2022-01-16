@@ -7,6 +7,7 @@ services:
     ports: 
       - 3000:80
     volumes:
+      - ./override.ini:/usr/local/etc/php/conf.d/override.ini
       - ./:/var/www/html
   db:
     image: mysql:5.6
