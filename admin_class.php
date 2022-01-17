@@ -305,6 +305,7 @@ class Action
         $data .= " , amount = '$amount' ";
         $data .= " , penalty_amount = '$penalty_amount' ";
         $data .= " , overdue = '$overdue' ";
+        // check if loan is complete
         if (empty($id)) {
             $save = $this->db->query('INSERT INTO payments set '.$data);
         } else {

@@ -56,7 +56,7 @@
 						 		<?php echo $row['payee']; ?>
 						 		
 						 	</td>
-						 	<td>
+						 	<td class="compute-on-print">
 						 		<?php echo number_format($row['amount'], 2); ?>
 						 		
 						 	</td>
@@ -102,16 +102,29 @@
 	})
 	$('#print_payments').click(function(e) {
 		e.preventDefault();
+		var html = $('html').clone().find('body').empty()
 		var printcontent = $('#loan-list').clone();
 		printcontent.attr('border', "1");
-		var printbody = $('html').clone().find('body').empty().html(printcontent);
+		var total = 0;
+		printcontent.find('.compute-on-print').each(function(idx, e) {
+			var amount = $(e).text().trim().replace(',', '');
+			total = total + parseFloat(amount)
+			console.log(total)
+		})
+
+		console.log(total);
+		$("<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td colspan='2'>Payment total: "+String(total)+"</td></tr>").appendTo(printcontent.find('tbody'))
+		var printbody = html.append(printcontent)
 		printbody.find('.remove-on-print').remove();
-		var mywindow = window.open('', 'Print Section', 'height=400,width=600');
-    mywindow.document.write(printbody.prop('outerHTML'));
-    mywindow.document.close(); // necessary for IE >= 10
-    mywindow.focus(); // necessary for IE >= 10*/
-    mywindow.print();
-    mywindow.close();
+		setTimeout(() => {
+			var mywindow = window.open('', 'Print Section', 'height=400,width=600');
+			mywindow.document.write(printbody.prop('outerHTML'));
+			mywindow.document.close(); // necessary for IE >= 10
+			mywindow.focus(); // necessary for IE >= 10*/
+			mywindow.print();
+			mywindow.close();
+		}, 500);
+		
 	})
 function delete_payment($id){
 		start_load()
