@@ -1,3 +1,6 @@
+<?php
+include_once './config/settings.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,11 +12,13 @@
  	
 
 <?php
-	session_start();
-  if(!isset($_SESSION['login_id']))
-    header('location:login.php');
- include('./header.php'); 
- // include('./auth.php'); 
+    session_start();
+  if (!isset($_SESSION['login_id'])) {
+      header('location:login.php');
+  }
+ include './header.php';
+ // include('./auth.php');
+
  ?>
 
 </head>
@@ -32,15 +37,15 @@
 </style>
 
 <body>
-	<?php include 'topbar.php' ?>
-	<?php include 'navbar.php' ?>
+	<?php include 'topbar.php'; ?>
+	<?php include 'navbar.php'; ?>
   <div class="toast" id="alert_toast" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-body text-white">
     </div>
   </div>
   <main id="view-panel" >
-      <?php $page = isset($_GET['page']) ? $_GET['page'] :'home'; ?>
-  	<?php include $page.'.php' ?>
+      <?php $page = isset($_GET['page']) ? $_GET['page'] : 'home'; ?>
+  	<?php include $page.'.php'; ?>
   	
 
   </main>

@@ -1,0 +1,21 @@
+version: '3'
+services:
+  php:
+    build: 
+      context: .
+      dockerfile: php.Dockerfile
+    ports: 
+      - 3000:80
+    volumes:
+      - ./override.ini:/usr/local/etc/php/conf.d/override.ini
+      - ./:/var/www/html
+  db:
+    image: mysql:5.6
+    # command: bash -c "mysql -u root loan_db < /database/loan_db.sql"
+    volumes:
+      - ./database:/database
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_DATABASE=loan_db
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes

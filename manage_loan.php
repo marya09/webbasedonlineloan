@@ -1,38 +1,46 @@
-<?php 
-include('db_connect.php');
-if(isset($_GET['id'])){
-$qry = $conn->query("SELECT * FROM loan_list where id = ".$_GET['id']);
-foreach($qry->fetch_array() as $k => $v){
-	$$k = $v;
+<?php
+include 'db_connect.php';
+if (isset($_GET['id'])) {
+    $qry = $conn->query('SELECT * FROM loan_list where id = '.$_GET['id']);
+    foreach ($qry->fetch_array() as $k => $v) {
+        $$k = $v;
+    }
 }
+if (isset($_GET['role'])) {
+    if ($_GET['role'] == 1) {
+        $role = 'admin';
+    } else {
+        $role = 'staff';
+    }
 }
+
 ?>
 <div class="container-fluid">
 	<div class="col-lg-12">
 	<form action="" id="loan-application">
-		<input type="hidden" name="id" value="<?php echo isset($_GET['id']) ? $_GET['id'] : '' ?>">
+		<input type="hidden" name="id" value="<?php echo isset($_GET['id']) ? $_GET['id'] : ''; ?>">
 		<div class="row">
 			<div class="col-md-6">
 				<label class="control-label">Borrower</label>
 				<?php
-				$borrower = $conn->query("SELECT *,concat(lastname,', ',firstname,' ',middlename) as name FROM borrowers order by concat(lastname,', ',firstname,' ',middlename) asc ");
-				?>
+                        $borrower = $conn->query("SELECT *,concat(lastname,', ',firstname,' ',middlename) as name FROM borrowers order by concat(lastname,', ',firstname,' ',middlename) asc ");
+                ?>
 				<select name="borrower_id" id="borrower_id" class="custom-select browser-default select2">
 					<option value=""></option>
-						<?php while($row = $borrower->fetch_assoc()): ?>
-							<option value="<?php echo $row['id'] ?>" <?php echo isset($borrower_id) && $borrower_id == $row['id'] ? "selected" : '' ?>><?php echo $row['name'] . ' | TIN Number:'.$row['tax_id'] ?></option>
+						<?php while ($row = $borrower->fetch_assoc()): ?>
+							<option value="<?php echo $row['id']; ?>" <?php echo isset($borrower_id) && $borrower_id == $row['id'] ? 'selected' : ''; ?>><?php echo $row['name'].' | TIN Number:'.$row['tax_id']; ?></option>
 						<?php endwhile; ?>
 				</select>
 			</div>
 			<div class="col-md-6">
 				<label class="control-label">Loan Type</label>
 				<?php
-				$type = $conn->query("SELECT * FROM loan_types order by `type_name` desc ");
-				?>
+                $type = $conn->query('SELECT * FROM loan_types order by `type_name` desc ');
+                ?>
 				<select name="loan_type_id" id="loan_type_id" class="custom-select browser-default select2">
 					<option value=""></option>
-						<?php while($row = $type->fetch_assoc()): ?>
-							<option value="<?php echo $row['id'] ?>" <?php echo isset($loan_type_id) && $loan_type_id == $row['id'] ? "selected" : '' ?>><?php echo $row['type_name'] ?></option>
+						<?php while ($row = $type->fetch_assoc()): ?>
+							<option value="<?php echo $row['id']; ?>" <?php echo isset($loan_type_id) && $loan_type_id == $row['id'] ? 'selected' : ''; ?>><?php echo $row['type_name']; ?></option>
 						<?php endwhile; ?>
 				</select>
 			</div>
@@ -43,25 +51,25 @@ foreach($qry->fetch_array() as $k => $v){
 			<div class="col-md-6">
 				<label class="control-label">Loan Plan</label>
 				<?php
-				$plan = $conn->query("SELECT * FROM loan_plan order by `months` desc ");
-				?>
+                $plan = $conn->query('SELECT * FROM loan_plan order by `months` desc ');
+                ?>
 				<select name="plan_id" id="plan_id" class="custom-select browser-default select2">
 					<option value=""></option>
-						<?php while($row = $plan->fetch_assoc()): ?>
-							<option value="<?php echo $row['id'] ?>" <?php echo isset($plan_id) && $plan_id == $row['id'] ? "selected" : '' ?> data-months="<?php echo $row['months'] ?>" data-interest_percentage="<?php echo $row['interest_percentage'] ?>" data-penalty_rate="<?php echo $row['penalty_rate'] ?>"><?php echo $row['months'] . ' month/s [ '.$row['interest_percentage'].'%, '.$row['penalty_rate'].'% ]' ?></option>
+						<?php while ($row = $plan->fetch_assoc()): ?>
+							<option value="<?php echo $row['id']; ?>" <?php echo isset($plan_id) && $plan_id == $row['id'] ? 'selected' : ''; ?> data-months="<?php echo $row['months']; ?>" data-interest_percentage="<?php echo $row['interest_percentage']; ?>" data-penalty_rate="<?php echo $row['penalty_rate']; ?>"><?php echo $row['months'].' month/s [ '.$row['interest_percentage'].'%, '.$row['penalty_rate'].'% ]'; ?></option>
 						<?php endwhile; ?>
 				</select>
 				<small>months [ interest%,penalty% ]</small>
 			</div>
 		<div class="form-group col-md-6">
 			<label class="control-label">Loan Amount</label>
-			<input type="number" name="amount" class="form-control text-right" step="any" id="" value="<?php echo isset($amount) ? $amount : '' ?>">
+			<input type="number" name="amount" class="form-control text-right" step="any" id="" value="<?php echo isset($amount) ? $amount : ''; ?>">
 		</div>
 		</div>
 		<div class="row">
 			<div class="form-group col-md-6">
 			<label class="control-label">Purpose</label>
-			<textarea name="purpose" id="" cols="30" rows="2" class="form-control"><?php echo isset($purpose) ? $purpose : '' ?></textarea>
+			<textarea name="purpose" id="" cols="30" rows="2" class="form-control"><?php echo isset($purpose) ? $purpose : ''; ?></textarea>
 		</div>
 		
 		<div class="form-group col-md-2 offset-md-2 .justify-content-center">
@@ -72,39 +80,67 @@ foreach($qry->fetch_array() as $k => $v){
 		<div id="calculation_table">
 			
 		</div>
-		<?php if(isset($status)): ?>
+		<?php if (isset($status)): ?>
 		<div class="row">
 			<div class="form-group col-md-6">
 				<label class="control-label">&nbsp;</label>
-				<select class="custom-select browser-default" name="status">
-					<option value="0" <?php echo $status == 0 ? "selected" : '' ?>>For Approval</option>
-					<option value="1" <?php echo $status == 1 ? "selected" : '' ?>>Approved</option>
-					<?php if($status !='4' ): ?>
-					<option value="2" <?php echo $status == 2 ? "selected" : '' ?>>Released</option>
-					<?php endif ?>
-					<?php if($status =='2' ): ?>
-					<option value="3" <?php echo $status == 3 ? "selected" : '' ?>>Complete</option>
-					<?php endif ?>
-					<?php if($status !='2' ): ?>
-					<option value="4" <?php echo $status == 4 ? "selected" : '' ?>>Denied</option>
-					<?php endif ?>
-				</select>
+				<?php
+
+                // if status is For Approvals
+                    if ($status == 0):
+                                            $amount = (float) $amount;
+                                            if (($amount > 50000 && in_array($role, ['staff']))):
+                                                                                            echo '<b>Only admins can approve transactions above 50,000.00</b>';
+                                                                                        else:
+                ?>
+					<select class="custom-select browser-default" name="status">
+						<option value="0" <?php echo $status == 0 ? 'selected' : ''; ?>>For Approval</option>
+						<option value="1" <?php echo $status == 1 ? 'selected' : ''; ?>>Approved</option>
+						<option value="4" <?php echo $status == 4 ? 'selected' : ''; ?>>Denied</option>
+					</select>
+					<?php
+
+                                            endif; // if ( ($amount >= 50000 &&  $role == 'admin') || ($amount <= 50000 && in_array($role, ['admin', 'staff'])))
+                    endif; // if($status == 0)
+                    // if status is approved
+                    if ($status == 1):
+                    ?>
+						<select class="custom-select browser-default" name="status">
+							<option value="1" <?php echo $status == 1 ? 'selected' : ''; ?>>Approved</option>
+							<option value="2" <?php echo $status == 2 ? 'selected' : ''; ?>>Released</option>
+						</select>
+					<?php endif; ?>
+					<?php
+                    // if released
+                    if ($status == 2): ?>
+										<span class="badge badge-info">Released</span>
+					<?php endif; ?>	
+					<?php
+                    // if released
+                    if ($status == 3): ?>
+										<span class="badge badge-success">Complete</span>
+					<?php endif; ?>	
+					<?php
+                    // if released
+                    if ($status == 4): ?>
+										<span class="badge badge-danger">Denied</span>
+					<?php endif; ?>	
 			</div>
 		</div>
-					<?php if(isset($todo) and $todo=="submit"){
-			$month=$_POST['month'];
-			$dt=$_POST['dt'];
-			$year=$_POST['year'];
-			$date_value="$month/$dt/$year";
-			echo "mm/dd/yyyy format :$date_value<br>";
-			$date_value="$year-$month-$dt";
-			echo "YYYY-mm-dd format :$date_value<br>";
-		}
+					<?php if (isset($todo) and $todo == 'submit') {
+                        $month = $_POST['month'];
+                        $dt = $_POST['dt'];
+                        $year = $_POST['year'];
+                        $date_value = "$month/$dt/$year";
+                        echo "mm/dd/yyyy format :$date_value<br>";
+                        $date_value = "$year-$month-$dt";
+                        echo "YYYY-mm-dd format :$date_value<br>";
+                    }
 
-		?>
+        ?>
 			
 		<hr>
-	<?php endif ?>
+	<?php endif; ?>
 		<div id="row-field">
 			<div class="row ">
 				<div class="col-md-12 text-center">
@@ -167,7 +203,7 @@ foreach($qry->fetch_array() as $k => $v){
 		})
 	})
 	$(document).ready(function(){
-		if('<?php echo isset($_GET['id']) ?>' == 1)
+		if('<?php echo isset($_GET['id']); ?>' == 1)
 			calculate()
 	})
 </script>
