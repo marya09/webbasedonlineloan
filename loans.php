@@ -98,7 +98,7 @@
 					 				N/a
 						 		<?php endif; ?>
 						 	</td>
-						 	<td class="text-center">
+						 	<td class="text-center status">
 						 		<?php if ($row['status'] == 0): ?>
 						 			<span class="badge badge-warning">For Approval</span>
 						 		<?php elseif ($row['status'] == 1): ?>
