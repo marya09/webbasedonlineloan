@@ -73,8 +73,8 @@
 						 	</td>
 
 						 </tr>
-
 						<?php endwhile; ?>
+
 					</tbody>
 				</table>
 			</div>
@@ -116,7 +116,6 @@
 			console.log(total)
 		})
 
-		console.log(total);
 		$("<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td colspan='2'>Payment total: "+String(total)+"</td></tr>").appendTo(printcontent.find('tbody'))
 		var printbody = html.append(printcontent)
 		printbody.find('.remove-on-print').remove();
