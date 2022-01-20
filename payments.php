@@ -30,6 +30,7 @@
 					<thead>
 						<tr>
 							<th class="text-center">#</th>
+							<th>Payment Date</th>
 							<th class="text-center">Loan Reference No</th>
 							<th class="text-center">Payee</th>
 							<th class="text-center">Amount</th>
@@ -42,15 +43,18 @@
 
                             $i = 1;
 
-                            $qry = $conn->query("SELECT p.*,l.ref_no,concat(b.lastname,', ',b.firstname,' ',b.middlename)as name, b.contact_no, b.address from payments p inner join loan_list l on l.id = p.loan_id inner join borrowers b on b.id = l.borrower_id  order by p.id asc");
+                            $qry = $conn->query("SELECT p.*,l.ref_no,concat(b.lastname,', ',b.firstname,' ',b.middlename)as name, b.contact_no, b.address, l.status from payments p inner join loan_list l on l.id = p.loan_id inner join borrowers b on b.id = l.borrower_id  order by p.id asc");
                             while ($row = $qry->fetch_assoc()):
 
                          ?>
 						 <tr>
 						 	
 						 	<td class="text-center"><?php echo $i++; ?></td>
+							<td>
+								<?php echo (new DateTime($row['date_created']))->format('M d, Y h:i A'); ?>
+							</td>
 						 	<td>
-						 		<?php echo $row['ref_no']; ?>
+						 			<?php echo $row['ref_no']; ?>
 						 	</td>
 						 	<td>
 						 		<?php echo $row['payee']; ?>
